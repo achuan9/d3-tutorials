@@ -2,7 +2,22 @@
 <html>
   <head>
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+      button {
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
+    <div id="barChart">
+      <button type="button" data-target="1">part1</button>
+      <button type="button" data-target="2">part2</button>
+      <button type="button" data-target="3">part3</button>
+      <button type="button" data-target="4">part4</button>
+    </div>
+    <div id="content">
+
+    </div>
   </body>
 </html>
