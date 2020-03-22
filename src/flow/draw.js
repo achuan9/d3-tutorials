@@ -1,3 +1,42 @@
+/**
+ * 画三角形 
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @param {Number} h 图形的高度
+ * @param {Number} gap 缺口的宽度
+ * @returns {d3.path} 
+ */
+export const drawTriangle = (path, x, y, w, h, gap) => {
+    const sX = x - (gap / 2) // 起点
+    const eX = x + (gap / 2) // 终点
+    const aW = (w - gap) / 2 // 开口两边底的宽度
+    const lX = sX - aW
+    const rX = eX + aW;
+    const vY = y + h // vertex 定点的 Y 坐标
+    path.moveTo(sX, y)
+    path.lineTo(lX, y)
+    path.lineTo(x, vY)
+    path.lineTo(rX, y)
+    path.lineTo(eX, y)
+    return path;
+}
+
+/**
+ * TODO: 左转
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+
+export const drawTurnLeft = (path, x, y, w) => {
+    
+}
 
 /**
  * 画直行标示
@@ -15,17 +54,210 @@ export const drawStraight = (path, x, y, w = 10) => {
     // 矩形的宽高
     const rw = w / 3;
     const rh = h - th;
-
     path.rect(x - rw / 2, y, rw, rh);
-
-    path.moveTo(x - rw / 2, rh)
-    path.lineTo(x - w / 2, rh)
-    path.lineTo(x, rh + th)
-    path.lineTo(x + w / 2, rh)
+    path = drawTriangle(path, x, rh, w, th, rw)
     path.closePath()
-
     return path
 }
+
+/**
+ * TODO: 右转
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnRight = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 直左
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawStraightLeft = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 直右
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawStraightRight = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 左右
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawLeftRight = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 左直右
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawLeftStraightRight = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 掉头
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnAround = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 掉头左转
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnAroundLeft = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 掉头直行
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnAroundStraight = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 掉头右转
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnAroundRight = (path, x, y, w) => {
+    
+}
+
+/**
+ * TODO: 掉头直左
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnAroundStraightLeft = (path, x, y, w) => {
+    
+}
+
+/**
+ * TODO: 掉头直右
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnAroundStraightRight = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 掉头左右
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnAroundLeftRight = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 掉头左直右
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawTurnAroundLeftStraightRight = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 行人一段过街
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawCrossHalf = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 行人一次过街
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawCrossOnce = (path, x, y, w) => {
+    
+}
+/**
+ * TODO: 行人二次过街
+ * 
+ * @param {d3.path} path d3.path对象
+ * @param {Number} x 起点x坐标 图形宽度中点
+ * @param {Number} y 起点y坐标 图形宽度中点
+ * @param {Number} w 图形的宽度
+ * @returns {d3.path} 
+ */
+export const drawCrossTwice = (path, x, y, w) => {
+    
+}
+
+
+
+
 
 /**
  * 画辅助线
