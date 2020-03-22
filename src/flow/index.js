@@ -1,8 +1,7 @@
 import * as d3 from "d3";
 import { SIGNAL_GROUPS, THEME_COLOR } from "./config";
-import { calcRotate, calcTranslate } from "./calc";
-import { drawStraight, drawReferenceLine } from "./draw";
-
+import { drawStraight, drawTriangle, drawReferenceLine } from "./draw";
+import Transform from './transform'
 
 // svg 边长
 const aSvg = 120;
@@ -22,18 +21,22 @@ const svg = d3.create('svg')
 drawReferenceLine(svg, d3.path(), aSvg, aSpace)
 
 
-for (const key in SIGNAL_GROUPS) {
-    const curList = SIGNAL_GROUPS[key]
+for (const direction in SIGNAL_GROUPS) {
+    const curList = SIGNAL_GROUPS[direction]
+    const tsf = new Transform(aSvg, direction, 2)
+    const r = tsf.getRotate()
     const g = svg.append('g')
     g.selectAll('path').data(curList)
         .join('path')
         .attr('fill', THEME_COLOR)
         .attr('transform', (d, i) => {
-            const t = calcTranslate(aSvg, arrowWidth, d.direction, i, 2)
-            const r = calcRotate(d.direction)
-            return `translate(${t}) rotate(${r}, 0, 0)`
+            const t2 = tsf.getTranslate(arrowWidth)
+            return `translate(${t2}) rotate(${r}, 0, 0)`
         })
-        .attr("d", d => drawStraight(d3.path(), 0, 0, 8))
+        .attr("d", d => {
+            return drawStraight(d3.path(), 0, 0, 8)
+            // return drawTriangle(d3.path(), 0, 0, 10, 5, 2)
+        })
 }
 
 

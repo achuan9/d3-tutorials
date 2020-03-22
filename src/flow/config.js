@@ -22,7 +22,7 @@ export const STAGES = responseStages.map(item1 => {
 });
 
 
-export const SIGNAL_GROUPS = STAGES[0].signalGroups
+export const SIGNAL_GROUPS = STAGES[1].signalGroups
 
 // 方向
 // 1 东；2 西； 3 南；4 北；5 东北；6 西北；7 东南；8 西南；9 其他
@@ -37,8 +37,18 @@ export const DIRECTION = {
     westSouth: 8,
     other: 9
 };
+// 旋转角度
 
-
+export const ROTATE = {
+    [DIRECTION.east]: 90,
+    [DIRECTION.west]: 270,
+    [DIRECTION.south]: 180,
+    [DIRECTION.north]: 0,
+    [DIRECTION.eastNorth]: 45,
+    [DIRECTION.westNorth]: 315,
+    [DIRECTION.eastSouth]: 135,
+    [DIRECTION.westSouth]: 225,
+}
 // 流向：0 无；1 左转；2 直行；3 右转；4 直左；5 直右；6 左右；7 左直右；8 掉头；9 掉头左转；10 掉头直行；11 掉头右转；12 掉头直左；13 掉头直右；14 掉头左右；15 掉头左直右；16 行人一段过街；17 行人一次过街；18 行人二次过街；
 export const FLOW_DIRECTION = {
     nothing: 0,
