@@ -310,6 +310,25 @@ export const drawReferenceLine = (svg, path, a, space) => {
         path.moveTo(...p10)
         path.lineTo(...p12)
         path.lineTo(...p2)
+
+        path.moveTo(space / 2, 0)
+        path.lineTo(0, space / 2)
+
+        path.moveTo(a, a - (space / 2))
+        path.lineTo(a - (space / 2), a)
+
+        path.moveTo(0, 0)
+        path.lineTo(a, a)
+
+        // path.moveTo(space, 0)
+        // path.lineTo(0, space)
+        path.moveTo(a/8, a/8)
+        path.arc(a/8, a/8, 5, 0 , 360)
+
+        // path.moveTo(a-(a/8), a-(a/8))
+        // path.arc(a-(a/8), a-(a/8), 5, 0 , 360)
+        
+
         return path
     }
 
@@ -318,6 +337,12 @@ export const drawReferenceLine = (svg, path, a, space) => {
         .attr('stroke', '#fff')
         .attr('stroke-width', "2")
         .attr('d', getPath(path, a, space))
+
+    // svg.append('path')
+    //     .attr('fill', 'none')
+    //     .attr('stroke', '#fff')
+    //     .attr('stroke-width', "2")
+    //     .attr('d', getPath(path, a, space))
 
 
 }

@@ -1,4 +1,4 @@
-import { DIRECTION, ROTATE } from "./config";
+import { DIRECTION, ROTATE, FLOW_PATH_WIDTH } from "./config";
 
 export default class Translate {
 
@@ -6,52 +6,37 @@ export default class Translate {
         this.svgSideLength = svgSideLength;
         this.direction = direction;
         this.gap = gap
-        // 第一个标志的宽度
-        this._firstWidth = 0
-        // 坐标
-        this._coordinate = []
-        // 计算起始坐标函数
-        this._calcStartFn = null;
-        // 计算当前坐标函数
-        this._calcCurrentFn = null;
+        this.lastOffset = 0 // 最后一个偏移量
+        this.startCoordinate = '' // 起始坐标
         this._init()
     }
 
-    getTranslate(w) {
-        let c = []
-        if (!this._firstWidth) {
-            this._firstWidth = w;
-            c = this._calcStartFn(this.svgSideLength, w)
-        } else {
-            const { _coordinate } = this;
-            const curItemBoxWidth = w + this.gap;
-            const preItemCoordinate = _coordinate[_coordinate.length - 1]
-            c = this._calcCurrentFn(preItemCoordinate, curItemBoxWidth)
-        }
-
-        this._coordinate.push(c)
-        return c.join(',')
+    getOffset(d) {
+        const ret = this.lastOffset;
+        const w = FLOW_PATH_WIDTH[d]
+        console.log(w, ret);
+        
+        this.lastOffset -= (w + this.gap);
+        return ret
     }
     getRotate() {
         return ROTATE[this.direction]
     }
 
     _init() {
-        const calcCurrentMap = {
-            [DIRECTION.east]: (c, w) => ([c[0], c[1] - w]),
-            [DIRECTION.west]: (c, w) => ([c[0], c[1] + w]),
-            [DIRECTION.south]: (c, w) => ([c[0] + w, c[1]]),
-            [DIRECTION.north]: (c, w) => ([c[0] - w, c[1]]),
-        }
-        const calcStartMap = {
-            [DIRECTION.east]: (a, w) => ([a, (a - w) / 2]),
-            [DIRECTION.west]: (a, w) => ([0, (a + w) / 2]),
-            [DIRECTION.south]: (a, w) => ([(a + w) / 2, a]),
-            [DIRECTION.north]: (a, w) => ([(a - w) / 2, 0]),
-        }
-        this._calcStartFn = calcStartMap[this.direction]
-        this._calcCurrentFn = calcCurrentMap[this.direction]
-    }
+        const a = this.svgSideLength;
 
+        const startMap = {
+            [DIRECTION.east]: [a, a / 2],
+            [DIRECTION.west]: [0, a / 2],
+            [DIRECTION.south]: [a / 2, a],
+            [DIRECTION.north]: [a / 2, 0],
+            [DIRECTION.eastNorth]: [a - a / 8, a / 8],
+            [DIRECTION.westNorth]: [a / 8, a / 8],
+            [DIRECTION.eastSouth]: [a - a / 8, a - a / 8],
+            [DIRECTION.westSouth]: [a / 8, a - a / 8],
+        }
+        this.startCoordinate = startMap[this.direction].join(',')
+    }
 
 }

@@ -1,44 +1,36 @@
 import * as d3 from "d3";
-import { SIGNAL_GROUPS, THEME_COLOR } from "./config";
-import { drawStraight, drawTriangle, drawReferenceLine } from "./draw";
+import { FLOW_PATH, THEME_COLOR } from "./config";
+import { SIGNAL_GROUPS } from "./data";
 import Transform from './transform'
 
 // svg 边长
-const aSvg = 120;
-
-// 中心空白区域边长
-const aSpace = aSvg / 2
-
-// 标志的宽度
-const arrowWidth = 10
+const aSvg = 110;
 
 const svg = d3.create('svg')
     .attr('width', aSvg)
     .attr('height', aSvg)
     .style('background', 'steelblue')
 
-
-drawReferenceLine(svg, d3.path(), aSvg, aSpace)
-
-
+// drawReferenceLine(svg, d3.path(), aSvg, aSvg / 2)
 for (const direction in SIGNAL_GROUPS) {
     const curList = SIGNAL_GROUPS[direction]
-    const tsf = new Transform(aSvg, direction, 2)
-    const r = tsf.getRotate()
+    // g 的transform定位初始位置
+    const tsf = new Transform(aSvg, direction, 15)
     const g = svg.append('g')
+        .attr('transform', `translate(${tsf.startCoordinate}) rotate(${tsf.getRotate()}) scale(0.15, 0.06)`)
+    // path 的transform: translate 定位偏移位置
     g.selectAll('path').data(curList)
         .join('path')
         .attr('fill', THEME_COLOR)
-        .attr('transform', (d, i) => {
-            const t2 = tsf.getTranslate(arrowWidth)
-            return `translate(${t2}) rotate(${r}, 0, 0)`
-        })
-        .attr("d", d => {
-            return drawStraight(d3.path(), 0, 0, 8)
-            // return drawTriangle(d3.path(), 0, 0, 10, 5, 2)
-        })
-}
+        .attr('transform', d => `translate(${tsf.getOffset(d.flowDirection)}, 0)`)
+        .attr("d", d => FLOW_PATH[d.flowDirection])
 
+    const transform = d3.zoomTransform(g.node());
+    transform.translate(100, 100) 
+    console.log(transform);
+
+
+}
 
 export default svg.node()
 
