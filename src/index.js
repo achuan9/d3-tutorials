@@ -3,8 +3,8 @@ import part2 from "./bar-chart/part2";
 import part3Render from "./bar-chart/part3";
 import part4 from "./bar-chart/part4";
 
-import flow from './flow/index'
-$('content').appendChild(flow)
+import  './flow/index'
+// $('content').appendChild(flow)
 
 
 

@@ -65,7 +65,6 @@ export const FLOW_PATH = {
     [FLOW.left]: "M-35 -100 L-35 195 L20 255 L20 305 L40 225 L20 150 L20 195 L-20 150 L-20 -100 Z",
     [FLOW.straight]: "M0 -100 L0 450 L-15 450 L7.5 570 L30 450 L15 450 L15 -100 Z",
     [FLOW.right]: "M35 -100 L35 195 L-20 255 L-20 305 L-40 225 L-20 150 L-20 195 L20 150 L20 -100 Z",
-    [FLOW.sidewalk]: '<line x1="2" y1="42" x2="2" y2="110" stroke="#B3EE3A" stroke-width="3" stroke-dasharray="4"></line>',
     [FLOW.straightLeft]: "M0 -100 L0 450 L-15 450 L7.5 570 L30 450 L15 450 L15 210 L87 291 L87 341 L107 261 L87 186 L87 231 L15 150 L15 -100 Z",
     [FLOW.straightRight]: "M0 -100 L0 150 L-72 231 L-72 186 L-92 261 L-72 341 L-72 291 L0 210 L0 450 L-15 450 L7.5 570 L30 450 L15 450 L15 -100 Z",
     [FLOW.leftRight]: "M0 -100 L0 381 L-72 462 L-72 417 L-92 492 L-72 572 L-72 522 L0 441 L7.5 432.6 L15 441 L87 522 L87 572 L107 492 L87 417 L87 462 L15 381 L15 -100 Z",
@@ -102,4 +101,7 @@ export const FLOW_PATH_WIDTH = {
     [FLOW.uturnLeftStraightRight]: 227,
 }
 
-export const THEME_COLOR = '#00ff00'
+export const THEME = {
+    flowColor: '#00ff00',
+    flowBg: 'steelblue'
+}
