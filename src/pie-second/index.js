@@ -7,9 +7,14 @@ const data = [
     {signal: 'green', second: 25},
 ]
 
+const updateData = {signal: 'green', second: 8}
+
 export default {
     render: function (wrapperDom) {
-        Pie(wrapperDom, data)
+        const p = new Pie(wrapperDom, data)
+        // setTimeout(() => {
+        //     p.start(updateData)
+        // }, 2000);
 
     }
 }

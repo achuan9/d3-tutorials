@@ -10,6 +10,15 @@ module.exports = {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist")
   },
+  module: {
+    rules: [{
+      test: /\.js$/,
+      // include: [
+      //   path.resolve(__dirname, 'src')
+      // ],
+      loader: 'babel-loader'
+    }]
+  },
   devServer: {
     contentBase: "./dist",
     hot: true
