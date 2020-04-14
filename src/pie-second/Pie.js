@@ -1,103 +1,83 @@
 
 import * as d3 from "d3";
-
-
-
 export default class PieSecond {
     #COLOR = d3.scaleOrdinal(["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f"]);
-    #SVG = null;
+    #outer = null;
+    #inner = null;
+    #pieData = [];
+    #timer = null;
+    #defaultOpts = {
+        wrapper: '#pieSecond',
+        data: [],
+        labelKey: 'signal',
+        valueKey: 'second',
+        outerRadius: 100,
+        innerRadius: 50
+    }
+    #opts = {};
+    constructor(opts) {
+        this.#opts = { ...this.#defaultOpts, ...opts };
+        const { wrapper, outerRadius, data } = this.#opts;
+        const sideLength = outerRadius * 2;
+        const svg = d3.select(wrapper)
+            .append("svg")
+            .attr("width", sideLength)
+            .attr("height", sideLength);
 
-    constructor(wrapper, data) {
-        console.log(this);
-        
-        // this.#SVG = d3.select(wrapper)
-        //     .append("svg")
-        //     .attr("width", '100%')
-        //     .attr("height", '100%')
-        //     .append("g")
-        //     .attr("transform", `translate(50%, 50%)`);
-        this.data = this.__pieData(data, 'second');
-        this.__drawOuterPie()
+        this.#outer = svg.append('g').attr('class', 'outer').attr("transform", `translate(${outerRadius}, ${outerRadius})`);
+        this.#inner = svg.append('g').attr('class', 'inner').attr("transform", `translate(${outerRadius}, ${outerRadius})`);
+        this.#pieData = d3.pie().value(d => d.second)(data)
+        this.__drawOuterPie();
+
     }
-    __pieData(data, key) {
-        return d3.pie().value(d => d[key])(data);
-    }
+
+
     __arcTween(a) {
         const i = d3.interpolate(this._current, a);
         this._current = i(1);
         return (t) => arc(i(t));
     }
+
     __drawOuterPie() {
-        const arc = d3.arc()
-            .innerRadius(radius / 2)
-            .outerRadius(radius);
-
-        const path = this.#SVG.selectAll('path')
-            .data(this.data)
-
-        path.transition()
-            .duration(200)
-            .attrTween("d", this.__arcTween);
-
-        path.join("path")
-            .attr("fill", (d, i) => color(i))
+        const { labelKey, innerRadius, outerRadius } = this.#opts;
+        const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius);
+        const g = this.#outer.selectAll('g')
+            .data(this.#pieData)
+            .join('g')
+        g.append('path')
+            .attr("fill", (d, i) => this.#COLOR(i))
             .attr("d", arc)
-            .each(function (d) { this._current = d; });
+
+        g.append('text')
+            .attr("transform", (d, i) => `translate(${arc.centroid(d)})`)
+            .style("text-anchor", "middle")
+            .text(d => d.data[labelKey])
     }
 
-    // 开始运动
-    start(obj) {
-
+    start(curPieData, curSecond) {
+        this.#inner.append('path')
+        this.#timer = d3.interval(_ => {
+            const { labelKey, valueKey, innerRadius } = this.#opts;
+            let curPie = this.#pieData.find(item => item.data[labelKey] === curPieData[labelKey]);
+            let curIndex = curPie.index;
+            
+            // if (curSecond >= curPie.data[valueKey]) {
+            //     curIndex = curIndex < this.#pieData.length - 1 ? curIndex++ : 0
+            //     curPie = this.#pieData.find(item => item.index === curIndex)
+            //     curPieData = curPie.data;
+            // }
+            const { startAngle, endAngle } = curPie;
+            const scale = d3.scaleLinear().domain([0, curPie.data[valueKey]]).range([startAngle, endAngle]);
+            const arc = d3.arc().innerRadius(0).outerRadius(innerRadius).startAngle(startAngle).endAngle(scale(curSecond));
+            this.#inner.select('path')
+                .attr("fill", _ => this.#COLOR(curIndex))
+                .attr("d", arc)
+            curSecond++
+        }, 1000)
     }
 
+    stop() {
+        this.#timer.stop()
+    }
 
 }
-
-// export default function (wrapper, data) {
-//     const width = 540;
-//     const height = 540;
-//     const radius = Math.min(width, height) / 2;
-
-//     const svg = d3.select(wrapper)
-//         .append("svg")
-//         .attr("width", width)
-//         .attr("height", height)
-//         .append("g")
-//         .attr("transform", `translate(${width / 2}, ${height / 2})`);
-
-//     const color = d3.scaleOrdinal(["#66c2a5", "#fc8d62", "#8da0cb",
-//         "#e78ac3", "#a6d854", "#ffd92f"]);
-
-//     const pieData = d3.pie()
-//         .value(d => d.second)(data);
-
-//     const arc = d3.arc()
-//         .innerRadius(radius / 2)
-//         .outerRadius(radius);
-
-
-//     function arcTween(a) {
-//         const i = d3.interpolate(this._current, a);
-//         this._current = i(1);
-//         return (t) => arc(i(t));
-//     }
-
-//     function update() {
-//         // Join new data
-//         const path = svg.selectAll("path")
-//             .data(pieData);
-
-//         // Update existing arcs
-//         path.transition().duration(200).attrTween("d", arcTween);
-
-//         // Enter new arcs
-//         path.join("path")
-//             .attr("fill", (d, i) => color(i))
-//             .attr("d", arc)
-//             .each(function (d) { this._current = d; });
-//     }
-
-//     update();
-
-
-// }
