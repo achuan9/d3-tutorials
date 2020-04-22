@@ -17,9 +17,21 @@ module.exports = {
         path.resolve(__dirname, 'src')
       ],
       loader: 'babel-loader'
+    },
+    {
+      test: /\.css$/,
+      include: [
+        path.resolve(__dirname, 'src')
+      ],
+      use: [
+        'style-loader',
+        'css-loader',
+        'less-loader'
+      ]
     }]
   },
   devServer: {
+    host: '0.0.0.0',
     contentBase: "./dist",
     hot: true
   },

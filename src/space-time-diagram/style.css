@@ -1,0 +1,7 @@
+line.benchmarkline {stroke: 1px solid black; stroke-dasharray:2}
+
+path.medianLine {stroke: #111; fill: none;}
+
+path.q1Line, path.q3Line {stroke: #555; fill: none; }
+path.q1Line {stroke-dasharray:1}
+path.q3Line {stroke-dasharray:2,1; }
