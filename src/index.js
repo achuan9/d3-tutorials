@@ -1,7 +1,7 @@
 
 
 
-import PieSecond from "./pie-second";
+import PieTimer from "./pie-timer";
 import crossing from "./crossing";
 import SpaceTimeDiagram from "./space-time-diagram";
 
@@ -16,7 +16,7 @@ const Render = {
 }
 
 
-Render.install(PieSecond)
+Render.install(PieTimer)
 Render.install(crossing)
 Render.install(SpaceTimeDiagram)
 
