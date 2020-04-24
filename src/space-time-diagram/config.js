@@ -7,8 +7,6 @@ export const margin = {
     bottom: 60
 };
 export const color = {
-    'greenFlashTime': 'green',
-    'greenTime': 'green',
-    'yellowTime': '#000',
-    'redTime': 'red',
+    'green': 'green',
+    'default': '#000'
 }

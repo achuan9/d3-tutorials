@@ -24,43 +24,58 @@ const svg = d3.create('svg')
 
 
 drawAxis()
-drawAxisLabel()
+drawAxisLabel('距离', '时间')
 
 
-data.crosses.reduce((sum, cur) => {
-    const { cycle, cycleSignal } = cur.plan;
-    const startX = sum + cur.distance;
-    let startY = -sum * 0.5
-    console.log(startY);
+// data.crosses.reduce((sum, cur) => {
+//     const { cycle, cycleSignal } = cur.plan;
+//     const startX = sum + cur.distance;
+//     let startY = -sum * 0.5
+//     console.log(startY);
     
-    drawCycleSignalGroup(time, cycle, startX, startY,cycleSignal)
-    return startX
-}, 0)
+//     drawCycleSignalGroup(time, cycle, startX, startY,cycleSignal)
+//     return startX
+// }, 0)
 
-function drawCycleSignalGroup(time, cycle, startX, startY, cycleSignal) {
-    const times = Math.ceil(time / cycle)
+// function drawCycleSignalGroup(time, cycle, startX, startY, cycleSignal) {
+//     const times = Math.ceil(time / cycle)
     
-    for (let i = 0, len = times; i < len; i++) {
-        drawCycleLine(cycle * (i + 1))
-        drawCycleSignal(startX, startY, cycleSignal)
-        startY += cycle
+//     for (let i = 0, len = times; i < len; i++) {
+//         drawCycleLine(cycle * (i + 1))
+//         drawCycleSignal(startX, startY, cycleSignal)
+//         startY += cycle
+//     }
+// }
+
+drawCycleSignalGroup(120 , 120)
+
+function drawCycleSignalGroup(duration, cycle) {
+    const time = duration / cycle;
+    for (let i = 0; i < time; i++) {
+        drawCycleSignal(0, cycle, 60, i)
     }
 }
-// 画周期信号灯组
-function drawCycleSignal(startX, startY, cycleSignal) {
+
+// 画一个周期内的绿灯
+function drawCycleSignal(distance, cycle, greenTime, time) {
     const g = svg.append('g')
         .attr('class', 'cycle-signal')
-        .attr('transform', `translate(${x(startX)}, 0)`)
-    for (const key in cycleSignal) {
-        g.append('line')
-            .attr('x1', 0)
-            .attr('y1', y(startY))
-            .attr('x2', 0)
-            .attr('y2', y(startY += cycleSignal[key]))
-            .attr('stroke', color[key])
-            .attr('stroke-width', 3)
+        .attr('transform', `translate(${x(distance)}, ${y(time * cycle)})`)
+    g.append('line')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', 0)
+        .attr('y2', y(greenTime))
+        .attr('stroke', 'green')
+        .attr('stroke-width', 4)
 
-    }
+    g.append('line')
+        .attr('x1', 0)
+        .attr('y1', y(greenTime))
+        .attr('x2', 0)
+        .attr('y2', y(cycle))
+        .attr('stroke', 'grey')
+        .attr('stroke-width', 4)
 }
 
 // 画坐标轴
@@ -77,14 +92,14 @@ function drawAxis() {
         .call(d3.axisLeft(y))
 }
 // 画坐标轴的label
-function drawAxisLabel() {
+function drawAxisLabel(xLabel, yLabel) {
     svg.append('g')
         .append("text")
         .attr("class", "x axis-label")
         .attr("text-anchor", "end")
         .attr("x", width)
         .attr("y", height - margin.bottom)
-        .text("距离");
+        .text(xLabel);
 
     svg.append('g')
         .append("text")
@@ -92,14 +107,14 @@ function drawAxisLabel() {
         .attr("text-anchor", "middle")
         .attr("x", margin.left)
         .attr("y", 18)
-        .text("时间")
+        .text(yLabel)
 }
 
-// 画周期横虚线
-function drawCycleLine(cycleVal) {
+// 画周期分割线
+function drawCycleLine(cycle) {
     svg.append('g')
         .attr("class", "benchmark-line")
-        .datum(cycleVal)
+        .datum(cycle)
         .append('line')
         .attr('x1', margin.left)
         .attr('x2', width - margin.right)
@@ -110,19 +125,19 @@ function drawCycleLine(cycleVal) {
         .attr('stroke', '#222');
 }
 
-const cl = d3.color("green")
-cl.opacity = 0.4
+// const cl = d3.color("green")
+// cl.opacity = 0.4
 
-const area = d3.area()
-    .x0(d => x(d))
-    .x1(d => x(d))
-    .y0(d => y(d- 200))
-    .y1(d => y(d))
+// const area = d3.area()
+//     .x0(d => x(d))
+//     .x1(d => x(d))
+//     .y0(d => y(d- 200))
+//     .y1(d => y(d))
 
-svg.append('path')
-    .datum([200, 400])
-    .attr('d', area)
-    .attr('fill', cl)
+// svg.append('path')
+//     .datum([200, 400])
+//     .attr('d', area)
+//     .attr('fill', cl)
 
 
 // svg.append('g')
