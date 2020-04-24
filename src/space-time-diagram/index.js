@@ -8,6 +8,6 @@ import custom from "./custom";
 export default {
     render: function (wrapper) {
         // wrapper.appendChild(demo1)
-        // wrapper.appendChild(custom)
+        wrapper.appendChild(custom)
     }
 }

@@ -1,4 +1,4 @@
-transStageData:function(data){
+export const transStageData = function(data){
     //console.log(data);
    var options = this.options;
    var result = [];
