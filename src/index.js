@@ -4,6 +4,7 @@
 import PieTimer from "./pie-timer";
 import crossing from "./crossing";
 import SpaceTimeDiagram from "./space-time-diagram";
+import API from "./api";
 
 const Render = {
     moduleList: [],
@@ -16,9 +17,10 @@ const Render = {
 }
 
 
-Render.install(PieTimer)
-Render.install(crossing)
-Render.install(SpaceTimeDiagram)
+// Render.install(PieTimer)
+// Render.install(crossing)
+// Render.install(SpaceTimeDiagram)
+Render.install(API)
 
 
 
