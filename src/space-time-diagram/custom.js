@@ -26,11 +26,11 @@ const svg = d3.create('svg')
 drawAxis()
 drawAxisLabel('距离', '时间')
 
-data.crosses.reduce((pre, cur) => {
-    drawCycleSignalGroup(cross.distance, 120 * 4, cross.cycle, cross.greenTime, cross.offset)    
-}, {})
-for (const cross of data.crosses) {
-}
+// data.crosses.reduce((pre, cur) => {
+//     drawCycleSignalGroup(cross.distance, 120 * 4, cross.cycle, cross.greenTime, cross.offset)    
+// }, {})
+// for (const cross of data.crosses) {
+// }
 
 
 function drawGreenWave(params) {

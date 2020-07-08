@@ -1,10 +1,11 @@
 
 
 
-import PieTimer from "./pie-timer";
+// import Axis from "./axis";
+// import PieTimer from "./pie-timer";
 import crossing from "./crossing";
-import SpaceTimeDiagram from "./space-time-diagram";
-import API from "./api";
+// import SpaceTimeDiagram from "./space-time-diagram";
+// import API from "./api";
 
 const Render = {
     moduleList: [],
@@ -16,11 +17,12 @@ const Render = {
     }
 }
 
+// Render.install(Axis)
 
 // Render.install(PieTimer)
-// Render.install(crossing)
+Render.install(crossing)
 // Render.install(SpaceTimeDiagram)
-Render.install(API)
+// Render.install(API)
 
 
 

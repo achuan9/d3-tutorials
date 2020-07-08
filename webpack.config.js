@@ -28,6 +28,14 @@ module.exports = {
         'css-loader',
         'less-loader'
       ]
+    },
+    {
+      test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+      loader: "url-loader",
+      options: {
+        limit: 10000,
+        esModule: false
+      }
     }]
   },
   devtool: 'inline-source-map',
