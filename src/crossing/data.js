@@ -41,19 +41,19 @@ export default {
                             number: "1",
                             preDirection: 0,
                             sourceId: "86a80ff46875492b88df094d40c4978b",
-                            type: 2,
+                            type: 1,
                             width: 4,
                         },
                         {
                             direction: 3,
                             number: "4",
-                            type: 4,
+                            type: 2,
                             width: 3.5,
                         },
                         {
                             direction: 3,
                             number: "4",
-                            type: 1,
+                            type: 3,
                             width: 3.5,
                         },
                         // {

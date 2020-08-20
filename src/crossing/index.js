@@ -178,80 +178,27 @@ class Cross {
             console.log(curBranch);
             // 画中线
             branchWrapper.append('line')
-            .attr('x1', curBranch.entrance.width)
-            .attr('y1', 0)
-            .attr('x2', curBranch.entrance.width)
-            .attr('y2', LANE_HEIGHT)
-            .attr('stroke-width', curBranch.medianWidth)
-            .attr('stroke', 'yellow')
+                .attr('x1', curBranch.entrance.width)
+                .attr('y1', 0)
+                .attr('x2', curBranch.entrance.width)
+                .attr('y2', LANE_HEIGHT)
+                .attr('stroke-width', curBranch.medianWidth)
+                .attr('stroke', 'yellow')
 
             
-            // 画车道分割线
+            // 画车道
             cd.entrance.lanes.forEach((el, index, arr) => {
-                // const laneWrapper = branchWrapper.select(`#laneEntrance${index}`);
-                // const curLaneDrawData = curBranch.entrance.lanes[index];
                 el.width = el.width * SCALE;
-                
-                this._drawLaneSplit(branchWrapper, arr, index);
-                /**
-                 * 一、当前车道是普通车道
-                 *  1. 下一车道为普通车道，就是白色分割线
-                 *  2. 下一车道为非普通车道，就是特殊车道分割线
-                 * 
-                 *  与下一个车道对比，非普通车道优先
-                 * 
-                 *  1 普通车道；2 公交车道；3 潮汐车道；4 逆向可变车道；5 可变车道；6 右转专用道；7 非机动车道
-                 */
-                // const laneWrapper = branchWrapper.select(`#laneEntrance${index}`);
-                // const curLaneDrawData = curBranch.entrance.lanes[index];
-                // const nextLaneIndex = index === arr.length - 1 ? index : index + 1;
-                // const curSplitType = el.type != 1 ? el.type : arr[nextLaneIndex].type;
-                // if (curSplitType == 2) {
-                //     if (el.type == 2) {
-                //         laneWrapper.append("text")
-                //         .text("公交专用")
-                //         .attr('transform', `translate(${(curLaneDrawData.x + curLaneDrawData.width) / 2}, ${LANE_MARKER_START_Y}) rotate(${180})`)
-                //         .attr('textLength', 120)
-                //         .style('font-size', 20)
-                //         .style('font-weight', 'bold')
-                //         .style('fill', 'white')
-                //         .style('writing-mode', 'vertical-rl')
-                //     }
-                //     laneWrapper
-                //         .append('line')
-                //         .attr('x1', 0)
-                //         .attr('y1', 0)
-                //         .attr('x2', 0)
-                //         .attr('y2', BRANCH_HEIGHT - ZEBRA_CROSSING_HEIGHT)
-                //         .attr('stroke', '#DDA745')
-                //         .attr('stroke-width', 2)
-                //         .attr('stroke-dasharray', 8)
-                // } else {
-                //     laneWrapper
-                //         .append('line')
-                //         .attr('x1', 0)
-                //         .attr('y1', 0)
-                //         .attr('x2', 0)
-                //         .attr('y2', BRANCH_HEIGHT - ZEBRA_CROSSING_HEIGHT)
-                //         .attr('stroke', '#fff')
-                //         .attr('stroke-width', 2)
-                // }
-
+                this._drawLane(branchWrapper, arr, index, false);
             })
+            // cd.exit.lanes.forEach((el, index, arr) => {
+            //     el.width = el.width * SCALE;
+            //     this._drawLane(branchWrapper, arr, index, true);
+            // })
         })
-
-        function drawLaneArrow(wrapper, flowDirection, laneWidth, isExit) {
-            // 画箭头
-            wrapper.append('path')
-                .attr('d', LANE_ARROW[flowDirection])
-                .attr("fill", "white")
-                .attr("stroke", "white")
-                .attr("stroke-width", 2)
-                .attr("transform", `translate(${laneWidth / 2}, ${LANE_ARROW_START_Y}) scale(0.14) rotate(${isExit ? 180 : 0})`)
-        }
     }
 
-    _drawLaneSplit(branchWrapper, lanes, index) {
+    _drawLane(branchWrapper, lanes, index, isExit) {
         const lane = lanes[index];
         const laneWrapper = branchWrapper.select(`#laneEntrance${index}`);
         // 1 普通车道；2 公交车道；3 潮汐车道；4 逆向可变车道；5 可变车道；6 右转专用道；7 非机动车道
@@ -260,52 +207,56 @@ class Cross {
         const NEED_REMOVE_PREV_LINE_TYPE = [2, 3, 4, 5]; // 需要删除前一个车道的分割线的车道类型
         const MAP = {
             1: function() {
-                
+                lineSolid(laneWrapper, lane.width);
+                if (index && lanes[index - 1].type == 1) {
+                    branchWrapper.select(`#laneEntrance${index} line`).remove();
+                }
+                arrow(laneWrapper, lane.width, lane.direction, isExit);
             },
             2: function () {
-                markerBus(laneWrapper, lane.width)
+                markerBus(laneWrapper, lane.width);
+                arrow(laneWrapper, lane.width, lane.direction, isExit);
             },
             3: function () {
                 lineTide(laneWrapper, lane.width);
+                arrow(laneWrapper, lane.width, lane.direction, isExit);
             },
             4: function () {
                 lineReverseVariable(laneWrapper, lane.width);
+                arrow(laneWrapper, lane.width, lane.direction, isExit);
             },
             5: function () {
                 lineVariable(laneWrapper, lane.width);
+                arrow(laneWrapper, lane.width, lane.direction, isExit);
             },
             6: function () {
-                lineTide(laneWrapper, lane.width);
+                // lineTide(laneWrapper, lane.width);
             },
             7: function () {
                 markerNonMotorVehicle(laneWrapper, lane.width);
+                arrow(laneWrapper, lane.width, lane.direction, isExit);
             },
 
         }
 
-        if (index !== 0 && ~NEED_REMOVE_PREV_LINE_TYPE.indexOf(lane.type)) {
-            branchWrapper.select(`#laneEntrance${index - 1} line`).remove();
-        }
-        if (index !== lanes.length - 1 && lane.type === 1) {
-            lineSolid(laneWrapper, lane.width);
-        }
         MAP[lane.type]();
-
         // 公交专用
         function markerBus(wrapper, laneWidth) {
             wrapper.append('line')
+                .attr('class','line-1')
                 .attr('x1', LINE_OFFSET)
-                .attr('y1', 0)
+                .attr('y1', LANE_HEIGHT)
                 .attr('x2', LINE_OFFSET)
-                .attr('y2', LANE_HEIGHT)
+                .attr('y2', 0)
                 .attr('stroke-width', LINE_WIDTH)
                 .attr('stroke', '#fbad10')
                 .attr('stroke-dasharray', 24)
             wrapper.append('line')
+                .attr('class','line-2')
                 .attr('x1', laneWidth - LINE_OFFSET)
-                .attr('y1', 0)
+                .attr('y1', LANE_HEIGHT)
                 .attr('x2', laneWidth - LINE_OFFSET)
-                .attr('y2', LANE_HEIGHT)
+                .attr('y2', 0)
                 .attr('stroke-width', LINE_WIDTH)
                 .attr('stroke', '#fbad10')
                 .attr('stroke-dasharray', 24)
@@ -319,49 +270,51 @@ class Cross {
                 .style('writing-mode', 'vertical-rl')
                 .style('font-size', '14px')
         }
-
         // 潮汐车道
         function lineTide(wrapper, laneWidth) {
             wrapper.append("line")
+                .attr('class','line-1')
                 .attr("x1", LINE_OFFSET)
-                .attr("y1", 0)
+                .attr("y1", LANE_HEIGHT)
                 .attr("x2", LINE_OFFSET)
-                .attr("y2", LANE_HEIGHT)
+                .attr("y2", 0)
                 .attr("fill", "#fbad10")
                 .attr("stroke", " #fbad10")
                 .attr("stroke-width", LINE_WIDTH)
                 .attr("stroke-dasharray", "10 3")
 
             wrapper.append("line")
+                .attr('class','line-2')
                 .attr("x1", laneWidth - LINE_OFFSET)
-                .attr("y1", 0)
+                .attr("y1", LANE_HEIGHT)
                 .attr("x2", laneWidth - LINE_OFFSET)
-                .attr("y2", LANE_HEIGHT)
+                .attr("y2", 0)
                 .attr("fill", "#fbad10")
                 .attr("stroke", " #fbad10")
                 .attr("stroke-width", LINE_WIDTH)
                 .attr("stroke-dasharray", "10 3")
         }
-
         // 逆向可变车道
         function lineReverseVariable(wrapper, laneWidth) {
             wrapper.append("line")
+                .attr('class','line-1')
                 .attr("x1", LINE_OFFSET)
                 .attr("y1", 0)
                 .attr("x2", LINE_OFFSET)
                 .attr("y2", LANE_HEIGHT)
                 .attr("fill", "#52de7c")
                 .attr("stroke", " #52de7c")
-                .attr("stroke-width", 3)
+                .attr("stroke-width", LINE_WIDTH)
 
             wrapper.append("line")
+                .attr('class','line-2')
                 .attr("x1", laneWidth - LINE_OFFSET)
                 .attr("y1", 0)
                 .attr("x2", laneWidth - LINE_OFFSET)
                 .attr("y2", LANE_HEIGHT)
                 .attr("fill", "#52de7c")
                 .attr("stroke", " #52de7c")
-                .attr("stroke-width", 3)
+                .attr("stroke-width", LINE_WIDTH)
         }
         // 可变车道
         function lineVariable(wrapper, laneWidth) {
@@ -394,6 +347,7 @@ class Cross {
                 .attr("fill", "#fff")
 
             wrapper.append("line")
+                .attr('class','line-1')
                 .attr('x1', 0)
                 .attr('y1', 0)
                 .attr('x2', 0)
@@ -402,6 +356,7 @@ class Cross {
                 .attr('stroke', '#fff')
 
             wrapper.append("line")
+                .attr('class','line-2')
                 .attr('x1', laneWidth)
                 .attr('y1', 0)
                 .attr('x2', laneWidth)
@@ -431,6 +386,15 @@ class Cross {
 
         function lineSolid(wrapper, laneWidth) {
             wrapper.append('line')
+                .attr('class','line-1')
+                .attr('x1', LINE_OFFSET)
+                .attr('y1', 0)
+                .attr('x2', LINE_OFFSET)
+                .attr('y2', LANE_HEIGHT)
+                .attr('stroke-width', LINE_WIDTH)
+                .attr('stroke', '#fff')
+            wrapper.append('line')
+                .attr('class','line-2')
                 .attr('x1', laneWidth - LINE_OFFSET)
                 .attr('y1', 0)
                 .attr('x2', laneWidth - LINE_OFFSET)
@@ -439,36 +403,19 @@ class Cross {
                 .attr('stroke', '#fff')
         }
 
-        // 画中线
-        function drawMedian(wrapper, entranceWidth) {
-            wrapper.append('line')
-                .attr('x1', entranceWidth)
-                .attr('y1', 0)
-                .attr('x2', entranceWidth)
-                .attr('y2', LANE_HEIGHT)
-                .attr('stroke-width', LANE_LINE_WIDTH * 2)
-                .attr('stroke', 'yellow')
-        }
-
-
-        function zebraStripes(params) {
-
+        // 画箭头
+        function arrow(wrapper, laneWidth, laneFlowDirection, isExit) {
+            wrapper.append('path')
+                .attr('d', LANE_ARROW[laneFlowDirection])
+                .attr("fill", "white")
+                .attr("stroke", "white")
+                .attr("stroke-width", 2)
+                .attr("transform", `translate(${laneWidth / 2}, ${LANE_ARROW_START_Y}) scale(0.14) rotate(${isExit ? 180 : 0})`)
         }
         
+        
     }
-
-    _drawLaneTypeMarker(type) {
-
-        function bus(wrapper, x, y) {
-
-        }
-        function tide(wrapper, x, y) {
-
-        }
-        function bus(wrapper, x, y) {
-
-        }
-
+    zebraStripes(params) {
 
     }
 
